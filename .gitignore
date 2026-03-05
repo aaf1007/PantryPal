@@ -1,0 +1,20 @@
+### Global ignores for the PantryPal monorepo
+
+# macOS
+.DS_Store
+
+# Node / frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Java / backend build output
+server/pantry-pal/target/
+
+# IDEs / editors
+.idea/
+.vscode/
+*.iml
+
+server/pantry-pal/src/main/resources/application.properties
