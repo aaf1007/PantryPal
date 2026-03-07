@@ -11,8 +11,8 @@ export default function GeminiCall() {
       body: JSON.stringify({ ingredients: ["rice", "eggs", "soy sauce"] }),
     });
 
-    const text = await res.text();
-    setRecipe(text);
+    const data = await res.json();
+    setRecipe(data.recipe);
   }
 
   return (
