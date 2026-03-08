@@ -15,6 +15,8 @@ import org.springframework.web.client.RestTemplate;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+import com.aaf1007.pantry_pal.dtos.RecipeRequest;
+
 @Component
 public class GeminiClient {
 
