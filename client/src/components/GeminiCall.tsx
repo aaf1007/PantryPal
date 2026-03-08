@@ -16,9 +16,11 @@ export default function GeminiCall() {
   }
 
   return (
-    <div>
-      <h1>Call Gemini</h1>
-      <button onClick={ async () => {
+    <div className="flex flex-col items-center gap-1 w-[40vw]">
+      <h1>Get Recipe</h1>
+      <button className="hover:underline hover:cursor-pointer"
+        onClick={ async () => {
+        setRecipe("");
         setCall(true);
         await generateRecipe();
         setCall(false);

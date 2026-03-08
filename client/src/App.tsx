@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import './App.css'
 import GeminiCall from './components/GeminiCall'
 
 function App() {
 
   return (
-    <div>
+    <div className="flex justify-center items-center h-dvh">
       <GeminiCall/>
     </div>
   )
