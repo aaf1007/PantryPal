@@ -39,10 +39,14 @@ public class RecipeService {
         """.formatted(request.getIngredients());
   
       String response = geminiClient.generateText(prompt);
+      // Clean up Gemini Response for ObjectMapper
+      response = response.replaceAll("```json", "");
+      response = response.replaceAll("```", "");
+      response = response.trim();
       ObjectMapper objectMapper = new ObjectMapper();
 
       try {
-        return objectMapper.readValue(response, RecipeResponse.class);
+        return objectMapper.readValue(response, RecipeResponse.class); // Returns this as a JSON
       } catch (Exception e) {
         throw new RuntimeException("Failed to parse Gemini response", e);
       }
