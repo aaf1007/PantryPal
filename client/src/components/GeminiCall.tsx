@@ -10,8 +10,7 @@ type RecipeResponse = {
 export default function GeminiCall() {
   const [data, setData] = useState<RecipeResponse | null>(null);
   const [call, setCall] = useState(false);
-
-  // TODO: change data field since data.recipe does not exist
+  
   async function generateRecipe() {
     setCall(true);
     const res = await fetch("/api/recipes/generate", {
