@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type RecipeResponse = {
   title: string;
@@ -7,47 +7,32 @@ type RecipeResponse = {
   estimatedTime: number;
 };
 
-/** Main pantry card — search ingredients, build a list, generate a recipe */
 export default function IngredientsCall() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<string[]>([]);
+  const [input, setInput] = useState("");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchError, setSearchError] = useState<string | null>(null);
-  const [hasSearched, setHasSearched] = useState(false);
-
   const [recipe, setRecipe] = useState<RecipeResponse | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
+  const [recipeVisible, setRecipeVisible] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  /** Fetch ingredient suggestions from the backend for the current query */
-  async function handleSearchSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const trimmed = searchQuery.trim();
-    if (!trimmed) return;
 
-    setIsSearching(true);
-    setSearchError(null);
-    setHasSearched(true);
-
-    try {
-      const res = await fetch(`/api/ingredients/search?query=${encodeURIComponent(trimmed)}`);
-      if (!res.ok) throw new Error("Search failed");
-      const data: string[] = await res.json();
-      setSearchResults(data);
-    } catch {
-      setSearchError("Could not fetch ingredients. Try again.");
-      setSearchResults([]);
-    } finally {
-      setIsSearching(false);
+  useEffect(() => {
+    if (recipe) {
+      const id = requestAnimationFrame(() => setRecipeVisible(true));
+      return () => cancelAnimationFrame(id);
     }
-  }
+    setRecipeVisible(false);
+  }, [recipe]);
 
-  /** Add an ingredient to the selected list, ignoring duplicates */
-  function handleAddIngredient(ingredient: string) {
-    if (selectedIngredients.includes(ingredient)) return;
-    setSelectedIngredients((prev) => [...prev, ingredient]);
+  /** Add the typed ingredient to the list, ignoring duplicates and empty values */
+  function handleAddIngredient(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = input.trim();
+    if (!trimmed || selectedIngredients.includes(trimmed)) return;
+    setSelectedIngredients((prev) => [...prev, trimmed]);
+    setInput("");
+    inputRef.current?.focus();
   }
 
   /** Remove an ingredient from the selected list */
@@ -58,7 +43,6 @@ export default function IngredientsCall() {
   /** Post the selected ingredients to the recipe generator */
   async function handleGenerateRecipe() {
     if (selectedIngredients.length === 0) return;
-
     setIsGenerating(true);
     setGenerateError(null);
     setRecipe(null);
@@ -69,9 +53,8 @@ export default function IngredientsCall() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ingredients: selectedIngredients }),
       });
-      if (!res.ok) throw new Error("Generation failed");
-      const data: RecipeResponse = await res.json();
-      setRecipe(data);
+      if (!res.ok) throw new Error();
+      setRecipe(await res.json());
     } catch {
       setGenerateError("Could not generate recipe. Try again.");
     } finally {
@@ -80,9 +63,14 @@ export default function IngredientsCall() {
   }
 
   return (
-    <div className="w-full max-w-xl px-4">
+    <div
+      className={[
+        "flex items-start gap-4 w-full px-4 transition-[max-width] duration-500 ease-out",
+        recipe ? "flex-row max-w-4xl" : "flex-col max-w-sm",
+      ].join(" ")}
+    >
       {/* Picker card */}
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 flex flex-col gap-5">
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 flex flex-col gap-5 w-full lg:max-w-sm shrink-0">
         {/* Header */}
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
@@ -93,59 +81,25 @@ export default function IngredientsCall() {
           </p>
         </div>
 
-        {/* Search row */}
-        <form onSubmit={handleSearchSubmit} className="flex gap-2">
+        {/* Input row */}
+        <form onSubmit={handleAddIngredient} className="flex gap-2">
           <input
             ref={inputRef}
             type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
             placeholder="e.g. 2 cups of Flour"
             className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-gray-400 transition-colors"
           />
           <button
             type="submit"
-            disabled={isSearching || !searchQuery.trim()}
+            disabled={!input.trim()}
             className="flex items-center gap-1.5 bg-green-500 hover:bg-green-600 disabled:opacity-40 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors cursor-pointer"
           >
             <span className="text-base leading-none">+</span>
-            {isSearching ? "Searching…" : "Add"}
+            Add
           </button>
         </form>
-
-        {/* Search results */}
-        {searchError && (
-          <p className="text-sm text-red-500 -mt-2">{searchError}</p>
-        )}
-
-        {!isSearching && hasSearched && searchResults.length === 0 && !searchError && (
-          <p className="text-sm text-gray-400 -mt-2">No ingredients found.</p>
-        )}
-
-        {searchResults.length > 0 && (
-          <div className="flex flex-col gap-2 -mt-1">
-            {searchResults.map((ingredient) => {
-              const alreadyAdded = selectedIngredients.includes(ingredient);
-              return (
-                <div
-                  key={ingredient}
-                  className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5"
-                >
-                  <span className="text-sm text-gray-700 truncate pr-4">
-                    {ingredient}
-                  </span>
-                  <button
-                    onClick={() => handleAddIngredient(ingredient)}
-                    disabled={alreadyAdded}
-                    className="shrink-0 text-sm font-medium text-green-600 hover:text-green-700 disabled:text-gray-300 transition-colors cursor-pointer"
-                  >
-                    {alreadyAdded ? "Added" : "+ Add"}
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        )}
 
         {/* Selected ingredients */}
         {selectedIngredients.length > 0 && (
@@ -177,20 +131,31 @@ export default function IngredientsCall() {
             disabled={selectedIngredients.length === 0 || isGenerating}
             className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 disabled:opacity-40 text-white font-bold text-sm py-3.5 rounded-xl transition-colors cursor-pointer"
           >
-            <span>✕</span>
-            {isGenerating ? "Generating…" : "Generate Recipes"}
+            {isGenerating ? "Generating…" : "Generate Recipe"}
           </button>
           <p className="text-xs text-gray-400">
             We'll find recipes matching your current pantry.
           </p>
         </div>
+
+        {generateError && (
+          <p className="text-sm text-red-500 -mt-2 text-center">{generateError}</p>
+        )}
       </div>
 
-      {/* Recipe result */}
-      {generateError && (
-        <p className="text-sm text-red-500 mt-4 text-center">{generateError}</p>
+      {/* Recipe panel — fades and slides in beside the picker */}
+      {recipe && (
+        <div
+          className={[
+            "w-full lg:flex-1 transition-all duration-500 ease-out motion-reduce:transition-none",
+            recipeVisible
+              ? "opacity-100 translate-y-0 lg:translate-x-0"
+              : "opacity-0 translate-y-3 lg:translate-y-0 lg:translate-x-3",
+          ].join(" ")}
+        >
+          <RecipeCard data={recipe} />
+        </div>
       )}
-      {recipe && <RecipeCard data={recipe} />}
     </div>
   );
 }
@@ -206,7 +171,7 @@ function TrashIcon() {
 
 function RecipeCard({ data }: { data: RecipeResponse }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 mt-4 flex flex-col gap-4">
+    <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 flex flex-col gap-4 h-full overflow-y-auto">
       <h2 className="text-xl font-bold text-gray-900">{data.title}</h2>
 
       <div>
@@ -215,9 +180,7 @@ function RecipeCard({ data }: { data: RecipeResponse }) {
         </h3>
         <ul className="flex flex-col gap-1">
           {data.ingredients.map((ing) => (
-            <li key={ing} className="text-sm text-gray-700">
-              {ing}
-            </li>
+            <li key={ing} className="text-sm text-gray-700">{ing}</li>
           ))}
         </ul>
       </div>
@@ -228,9 +191,7 @@ function RecipeCard({ data }: { data: RecipeResponse }) {
         </h3>
         <ol className="flex flex-col gap-2 list-decimal list-inside">
           {data.steps.map((step) => (
-            <li key={step} className="text-sm text-gray-700">
-              {step}
-            </li>
+            <li key={step} className="text-sm text-gray-700">{step}</li>
           ))}
         </ol>
       </div>
