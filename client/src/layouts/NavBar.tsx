@@ -1,6 +1,8 @@
-import CardNav from './CardNav.tsx';
+import { useNavigate } from 'react-router-dom'
+import CardNav from './CardNav.tsx'
 
 export default function NavBar() {
+  const navigate = useNavigate()
   const items = [
     {
       label: "Home",
@@ -30,6 +32,7 @@ export default function NavBar() {
       buttonTextColor="#fff"
       ease="power3.out"
       theme="light"
+      onCtaClick={() => navigate('/ingredients')}
     />
   )
 }
