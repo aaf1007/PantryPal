@@ -10,13 +10,14 @@ type RecipeResponse = {
 export default function GeminiCall() {
   const [data, setData] = useState<RecipeResponse | null>(null);
   const [call, setCall] = useState(false);
-  
+  const [ingredientsList, setIngredientsList] = useState<Array<string>>([]);
+
   async function generateRecipe() {
     setCall(true);
     const res = await fetch("/api/recipes/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ingredients: ["rice", "eggs", "soy sauce"] }),
+      body: JSON.stringify({ ingredients: ingredientsList }),
     });
     const dr = await res.json();
     setData(dr);
