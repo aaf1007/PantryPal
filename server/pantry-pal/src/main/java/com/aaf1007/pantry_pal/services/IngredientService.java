@@ -1,5 +1,7 @@
 package com.aaf1007.pantry_pal.services;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +26,13 @@ public class IngredientService {
         this.objectMapper = objectMapper;
     }
 
-    public List<String> getIngredients(String ingredient) {
+    public List<String> getIngredients(String query) {
+        if (query == null || query.isBlank()) return List.of();
+
+        String encodedQuery = URLEncoder.encode(query.trim(), StandardCharsets.UTF_8);
         String url =
             "https://api.nal.usda.gov/fdc/v1/foods/search?query="
-            + ingredient
+            + encodedQuery
             + "&pageSize=5&api_key="
             + apiKey;
         
