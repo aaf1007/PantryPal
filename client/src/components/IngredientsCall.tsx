@@ -25,7 +25,7 @@ export default function IngredientsCall() {
     setRecipeVisible(false);
   }, [recipe]);
 
-  /** Add the typed ingredient to the list, ignoring duplicates and empty values */
+
   function handleAddIngredient(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = input.trim();
@@ -35,12 +35,10 @@ export default function IngredientsCall() {
     inputRef.current?.focus();
   }
 
-  /** Remove an ingredient from the selected list */
   function handleRemoveIngredient(ingredient: string) {
     setSelectedIngredients((prev) => prev.filter((i) => i !== ingredient));
   }
 
-  /** Post the selected ingredients to the recipe generator */
   async function handleGenerateRecipe() {
     if (selectedIngredients.length === 0) return;
     setIsGenerating(true);
@@ -65,18 +63,18 @@ export default function IngredientsCall() {
   return (
     <div
       className={[
-        "flex items-start gap-4 w-full px-4 transition-[max-width] duration-500 ease-out",
+        "flex items-start gap-6 w-full px-4 transition-[max-width] duration-500 ease-out",
         recipe ? "flex-row max-w-4xl" : "flex-col max-w-sm",
       ].join(" ")}
     >
       {/* Picker card */}
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 flex flex-col gap-5 w-full lg:max-w-sm shrink-0">
+      <div className="bg-white border border-warm-beige-200 rounded-2xl p-6 flex flex-col gap-5 w-full lg:max-w-sm shrink-0">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-sage-900 tracking-tight">
             What's in your pantry?
           </h1>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-sage-600 mt-1">
             Add your ingredients to discover amazing recipes.
           </p>
         </div>
@@ -89,12 +87,12 @@ export default function IngredientsCall() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="e.g. 2 cups of Flour"
-            className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-gray-400 transition-colors"
+            className="flex-1 border border-warm-beige-200 rounded-xl px-4 py-2.5 text-sm text-sage-900 placeholder-warm-beige-300 outline-none focus:border-sage-600 transition-colors bg-white"
           />
           <button
             type="submit"
             disabled={!input.trim()}
-            className="flex items-center gap-1.5 bg-green-500 hover:bg-green-600 disabled:opacity-40 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 bg-sage-900 hover:bg-sage-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors cursor-pointer"
           >
             <span className="text-base leading-none">+</span>
             Add
@@ -107,14 +105,14 @@ export default function IngredientsCall() {
             {selectedIngredients.map((ingredient) => (
               <div
                 key={ingredient}
-                className="flex items-center justify-between bg-white border border-gray-200 rounded-xl px-4 py-2.5"
+                className="flex items-center justify-between bg-warm-beige-100 border border-warm-beige-200 rounded-xl px-4 py-2.5"
               >
-                <span className="text-sm text-gray-800 truncate pr-4">
+                <span className="text-sm text-sage-900 truncate pr-4">
                   {ingredient}
                 </span>
                 <button
                   onClick={() => handleRemoveIngredient(ingredient)}
-                  className="shrink-0 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                  className="shrink-0 text-warm-beige-300 hover:text-sage-600 transition-colors cursor-pointer"
                   aria-label={`Remove ${ingredient}`}
                 >
                   <TrashIcon />
@@ -129,11 +127,11 @@ export default function IngredientsCall() {
           <button
             onClick={handleGenerateRecipe}
             disabled={selectedIngredients.length === 0 || isGenerating}
-            className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 disabled:opacity-40 text-white font-bold text-sm py-3.5 rounded-xl transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 bg-sage-900 hover:bg-sage-700 text-white font-bold text-sm py-3.5 rounded-xl transition-colors cursor-pointer"
           >
             {isGenerating ? "Generating…" : "Generate Recipe"}
           </button>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-sage-600">
             We'll find recipes matching your current pantry.
           </p>
         </div>
@@ -143,7 +141,7 @@ export default function IngredientsCall() {
         )}
       </div>
 
-      {/* Recipe panel — fades and slides in beside the picker */}
+      {/* Recipe panel */}
       {recipe && (
         <div
           className={[
@@ -160,7 +158,6 @@ export default function IngredientsCall() {
   );
 }
 
-/** Minimal inline trash icon */
 function TrashIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -171,32 +168,38 @@ function TrashIcon() {
 
 function RecipeCard({ data }: { data: RecipeResponse }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6 flex flex-col gap-4 h-full overflow-y-auto">
-      <h2 className="text-xl font-bold text-gray-900">{data.title}</h2>
+    <div className="bg-white border border-warm-beige-200 rounded-2xl p-6 flex flex-col gap-5 h-full overflow-y-auto">
+      <h2 className="text-xl font-bold text-sage-900">{data.title}</h2>
 
       <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-warm-beige-300 mb-3">
           Ingredients
         </h3>
-        <ul className="flex flex-col gap-1">
+        <ul className="flex flex-col gap-2">
           {data.ingredients.map((ing) => (
-            <li key={ing} className="text-sm text-gray-700">{ing}</li>
+            <li key={ing} className="flex items-center gap-3 text-sm text-sage-600">
+              <div className="w-1 h-1 rounded-full bg-warm-beige-300 shrink-0" />
+              {ing}
+            </li>
           ))}
         </ul>
       </div>
 
-      <div>
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">
+      <div className="border-t border-warm-beige-200 pt-5">
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-warm-beige-300 mb-3">
           Steps
         </h3>
-        <ol className="flex flex-col gap-2 list-decimal list-inside">
-          {data.steps.map((step) => (
-            <li key={step} className="text-sm text-gray-700">{step}</li>
+        <ol className="flex flex-col gap-3">
+          {data.steps.map((step, i) => (
+            <li key={step} className="flex gap-3 text-sm text-sage-600">
+              <span className="text-warm-beige-300 font-medium shrink-0 w-4">{i + 1}.</span>
+              {step}
+            </li>
           ))}
         </ol>
       </div>
 
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-warm-beige-300 border-t border-warm-beige-200 pt-4">
         Estimated time: {data.estimatedTime} min
       </p>
     </div>

@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { GoArrowUpRight } from 'react-icons/go'
 import './CardNav.css'
 
@@ -26,6 +26,7 @@ type CardNavProps = {
   buttonBgColor?: string
   buttonTextColor?: string
   theme?: string
+  onCtaClick?: () => void
 }
 
 export default function CardNav({
@@ -37,6 +38,7 @@ export default function CardNav({
   menuColor,
   buttonBgColor,
   buttonTextColor,
+  onCtaClick,
 }: CardNavProps) {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -191,16 +193,17 @@ export default function CardNav({
           </div>
 
           <div className="logo-container">
-            <span className="logo-title">{title}</span>
+            <span className="logo-title text-sage-900 text-xl font-extrabold"><a href="/">{title}</a></span>
           </div>
 
-          <button
+          {/* <button
             type="button"
             className="card-nav-cta-button"
             style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
+            onClick={onCtaClick}
           >
             Get Started
-          </button>
+          </button> */}
         </div>
 
         <div className="card-nav-content" aria-hidden={!isExpanded}>

@@ -1,21 +1,23 @@
+import { useNavigate } from 'react-router-dom';
 import CardNav from './CardNav.tsx';
 
 export default function NavBar() {
+  const navigate = useNavigate()
   const items = [
     {
       label: "Home",
-      bgColor: "#0D0716",
-      textColor: "#fff",
+      bgColor: "#F5F3EF",
+      textColor: "#3A4A3D",
       links: [
         { label: "Home", ariaLabel: "Go to Home", href: "/" },
       ]
     },
     {
       label: "Recipes",
-      bgColor: "#170D27",
-      textColor: "#fff",
+      bgColor: "#E8E4DC",
+      textColor: "#3A4A3D",
       links: [
-        { label: "Ingredients", ariaLabel: "Go to Ingredients", href: "/ingredients" },
+        { label: "Generate", ariaLabel: "Go to Ingredients", href: "/ingredients" },
       ]
     },
   ];
@@ -30,6 +32,7 @@ export default function NavBar() {
       buttonTextColor="#fff"
       ease="power3.out"
       theme="light"
+      onCtaClick={() => navigate('/ingredients')}
     />
   )
 }

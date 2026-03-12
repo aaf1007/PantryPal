@@ -33,7 +33,7 @@ public class RecipeService {
         {
           "title": "string — creative recipe name",
           "ingredients": ["string — each item with quantity, e.g. '2 cloves garlic, minced'"],
-          "steps": ["string — numbered, clear cooking instructions"],
+          "steps": ["string, clear cooking instructions"],
           "estimatedTime": number (total minutes as integer)
         }
         """.formatted(request.getIngredients());
