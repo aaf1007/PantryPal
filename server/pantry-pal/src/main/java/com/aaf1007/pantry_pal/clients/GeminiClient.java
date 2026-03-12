@@ -20,10 +20,10 @@ public class GeminiClient {
   private final RestTemplate restTemplate;
   private final ObjectMapper objectMapper = new ObjectMapper();
 
-  @Value("${gemini.apiKey}")
+  @Value("${gemini.apiKey:}")
   private String apiKey;
 
-  @Value("${gemini.model}")
+  @Value("${gemini.model:gemini-2.5-flash}")
   private String model;
 
   public GeminiClient(RestTemplate restTemplate) {
@@ -31,6 +31,10 @@ public class GeminiClient {
   }
 
   public String generateText(String prompt) {
+    if (apiKey == null || apiKey.isBlank()) {
+      throw new IllegalStateException("GEMINI_API_KEY is not configured.");
+    }
+
     // JS: const url = `https://.../${model}:generateContent?key=${apiKey}`
     String url =
       "https://generativelanguage.googleapis.com/v1beta/models/"

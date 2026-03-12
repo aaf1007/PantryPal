@@ -1,62 +1,114 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react'
+import { buildApiUrl } from '../lib/api'
 
 type RecipeResponse = {
-  title: string;
-  ingredients: string[];
-  steps: string[];
-  estimatedTime: number;
-};
+  title: string
+  ingredients: string[]
+  steps: string[]
+  estimatedTime: number
+}
+
+async function readErrorMessage(response: Response) {
+  const contentType = response.headers.get('content-type') ?? ''
+
+  if (contentType.includes('application/json')) {
+    try {
+      const data = (await response.json()) as Record<string, unknown>
+      const message = data.message ?? data.error
+      return typeof message === 'string' ? message : null
+    } catch {
+      return null
+    }
+  }
+
+  const text = await response.text()
+  return text.trim() || null
+}
+
+function formatGenerateError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return 'Could not generate recipe. Try again.'
+  }
+
+  if (error.message === 'API_NOT_FOUND') {
+    return 'Could not generate recipe. The recipe API returned 404. Check that the backend is running and that VITE_API_URL points to the server root, not .../api.'
+  }
+
+  if (error.message === 'API_UNAVAILABLE') {
+    return 'Could not generate recipe. The backend is unreachable. Start the Spring Boot server or verify VITE_API_URL.'
+  }
+
+  if (error.message === 'Failed to fetch') {
+    return 'Could not generate recipe. The backend is unreachable. Start the Spring Boot server or verify VITE_API_URL.'
+  }
+
+  return `Could not generate recipe. ${error.message}`
+}
 
 export default function IngredientsCall() {
-  const [input, setInput] = useState("");
-  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
-  const [recipe, setRecipe] = useState<RecipeResponse | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generateError, setGenerateError] = useState<string | null>(null);
-  const [recipeVisible, setRecipeVisible] = useState(false);
+  const [input, setInput] = useState('')
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
+  const [recipe, setRecipe] = useState<RecipeResponse | null>(null)
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [generateError, setGenerateError] = useState<string | null>(null)
+  const [recipeVisible, setRecipeVisible] = useState(false)
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (recipe) {
-      const id = requestAnimationFrame(() => setRecipeVisible(true));
-      return () => cancelAnimationFrame(id);
+      const id = requestAnimationFrame(() => setRecipeVisible(true))
+      return () => cancelAnimationFrame(id)
     }
-    setRecipeVisible(false);
-  }, [recipe]);
-
+    setRecipeVisible(false)
+  }, [recipe])
 
   function handleAddIngredient(e: React.FormEvent) {
-    e.preventDefault();
-    const trimmed = input.trim();
-    if (!trimmed || selectedIngredients.includes(trimmed)) return;
-    setSelectedIngredients((prev) => [...prev, trimmed]);
-    setInput("");
-    inputRef.current?.focus();
+    e.preventDefault()
+    const trimmed = input.trim()
+    if (!trimmed || selectedIngredients.includes(trimmed)) return
+    setSelectedIngredients((prev) => [...prev, trimmed])
+    setInput('')
+    inputRef.current?.focus()
   }
 
   function handleRemoveIngredient(ingredient: string) {
-    setSelectedIngredients((prev) => prev.filter((i) => i !== ingredient));
+    setSelectedIngredients((prev) => prev.filter((i) => i !== ingredient))
   }
 
   async function handleGenerateRecipe() {
-    if (selectedIngredients.length === 0) return;
-    setIsGenerating(true);
-    setGenerateError(null);
-    setRecipe(null);
+    if (selectedIngredients.length === 0) return
+    setIsGenerating(true)
+    setGenerateError(null)
+    setRecipe(null)
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL ?? ""}/api/recipes/generate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch(buildApiUrl('/api/recipes/generate'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ingredients: selectedIngredients }),
-      });
-      if (!res.ok) throw new Error();
-      setRecipe(await res.json());
-    } catch {
-      setGenerateError("Could not generate recipe. Try again.");
+      })
+
+      if (!res.ok) {
+        const message = await readErrorMessage(res)
+
+        if (res.status === 404) {
+          throw new Error('API_NOT_FOUND')
+        }
+
+        throw new Error(message ?? `Request failed with status ${res.status}.`)
+      }
+
+      setRecipe(await res.json())
+    } catch (error) {
+      const message =
+        typeof navigator !== 'undefined' && !navigator.onLine
+          ? 'Could not generate recipe. Your browser is offline.'
+          : formatGenerateError(error)
+
+      setGenerateError(message)
     } finally {
-      setIsGenerating(false);
+      setIsGenerating(false)
     }
   }
 
@@ -65,11 +117,9 @@ export default function IngredientsCall() {
       className={[
         "flex items-start gap-6 w-full px-4 transition-[max-width] duration-500 ease-out",
         recipe ? "flex-row max-w-4xl" : "flex-col max-w-sm",
-      ].join(" ")}
+      ].join(' ')}
     >
-      {/* Picker card */}
       <div className="bg-white border border-warm-beige-200 rounded-2xl p-6 flex flex-col gap-5 w-full lg:max-w-sm shrink-0">
-        {/* Header */}
         <div className="text-center">
           <h1 className="text-2xl font-bold text-sage-900 tracking-tight">
             What's in your pantry?
@@ -79,7 +129,6 @@ export default function IngredientsCall() {
           </p>
         </div>
 
-        {/* Input row */}
         <form onSubmit={handleAddIngredient} className="flex gap-2">
           <input
             ref={inputRef}
@@ -99,7 +148,6 @@ export default function IngredientsCall() {
           </button>
         </form>
 
-        {/* Selected ingredients */}
         {selectedIngredients.length > 0 && (
           <div className="flex flex-col gap-2">
             {selectedIngredients.map((ingredient) => (
@@ -122,14 +170,13 @@ export default function IngredientsCall() {
           </div>
         )}
 
-        {/* Generate CTA */}
         <div className="flex flex-col items-center gap-1.5 mt-1">
           <button
             onClick={handleGenerateRecipe}
             disabled={selectedIngredients.length === 0 || isGenerating}
             className="w-full flex items-center justify-center gap-2 bg-sage-900 hover:bg-sage-700 text-white font-bold text-sm py-3.5 rounded-xl transition-colors cursor-pointer"
           >
-            {isGenerating ? "Generating…" : "Generate Recipe"}
+            {isGenerating ? 'Generating…' : 'Generate Recipe'}
           </button>
           <p className="text-xs text-sage-600">
             We'll find recipes matching your current pantry.
@@ -141,7 +188,6 @@ export default function IngredientsCall() {
         )}
       </div>
 
-      {/* Recipe panel */}
       {recipe && (
         <div
           className={[
@@ -149,13 +195,13 @@ export default function IngredientsCall() {
             recipeVisible
               ? "opacity-100 translate-y-0 lg:translate-x-0"
               : "opacity-0 translate-y-3 lg:translate-y-0 lg:translate-x-3",
-          ].join(" ")}
+          ].join(' ')}
         >
           <RecipeCard data={recipe} />
         </div>
       )}
     </div>
-  );
+  )
 }
 
 function TrashIcon() {
@@ -163,7 +209,7 @@ function TrashIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M2 4h12M5.333 4V2.667h5.334V4M6.667 7.333v4M9.333 7.333v4M3.333 4l.667 9.333h8L12.667 4" />
     </svg>
-  );
+  )
 }
 
 function RecipeCard({ data }: { data: RecipeResponse }) {
@@ -203,5 +249,5 @@ function RecipeCard({ data }: { data: RecipeResponse }) {
         Estimated time: {data.estimatedTime} min
       </p>
     </div>
-  );
+  )
 }
