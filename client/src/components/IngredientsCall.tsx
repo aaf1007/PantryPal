@@ -46,7 +46,7 @@ export default function IngredientsCall() {
     setRecipe(null);
 
     try {
-      const res = await fetch("/api/recipes/generate", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL ?? ""}/api/recipes/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ingredients: selectedIngredients }),
