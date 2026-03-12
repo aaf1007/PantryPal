@@ -1,106 +1,141 @@
 import { LuArrowRight, LuClock } from 'react-icons/lu'
 import { useNavigate } from 'react-router-dom'
 
-const mockIngredients = ['Cherry tomatoes', 'Pasta', 'Zucchini', 'Garlic', 'Olive oil']
+const steps = [
+  {
+    number: '01',
+    label: 'Add ingredients',
+    description: 'Tell us what\'s in your pantry ',
+  },
+  {
+    number: '02',
+    label: 'Generate a recipe',
+    description: 'AI picks the best recipe from what you already have.',
+  },
+  {
+    number: '03',
+    label: 'Start cooking',
+    description: 'Get clear steps and timing, nothing else in the way.',
+  },
+]
 
-/** Landing page — introduces the app and directs users to the ingredients flow */
+const exampleRecipe = {
+  title: 'Pasta Primavera',
+  time: '25 min',
+  ingredients: ['Cherry tomatoes', 'Pasta', 'Zucchini', 'Garlic', 'Olive oil'],
+}
+
 export default function HomePage() {
   const navigate = useNavigate()
 
   return (
-    <div className="">
+    <div className="min-h-screen bg-white">
 
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center overflow-hidden bg-linear-to-b">
-        <div className="max-w-6xl mx-auto px-6 pt-32 pb-20 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="flex flex-col items-center justify-center text-center px-6 pt-48 pb-28 bg-[url('/image.png')] bg-cover bg-center bg-no-repeat">
+        {/* <span className="inline-block text-xs font-semibold tracking-widest uppercase text-sage-600 mb-6">
+          Pantry Pal
+        </span> */}
 
-            {/* Left Section */}
-            <div>
-              <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 text-sage-900 leading-[1.05]">
-                Turn ingredients<br />into inspiration
-              </h1>
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-sage-900 leading-[1.04] max-w-3xl mb-6">
+          What's in your pantry?
+        </h1>
 
-              <p className="text-sage-600 text-xl max-w-md mb-10 leading-relaxed">
-                Simply tell us what's in your pantry, and let AI create delicious recipes tailored just for you.
-              </p>
+        <p className="text-sage-600 text-lg md:text-xl max-w-md leading-relaxed mb-10">
+          Add your ingredients. Get a recipe that actually uses what you have. Never waste any food again.
+        </p>
 
-              <button
-                onClick={() => navigate('/ingredients')}
-                className="inline-flex items-center gap-2 bg-sage-600 hover:bg-sage-700 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 cursor-pointer group hover:scale-[1.02]"
-              >
-                Get Started
-                <LuArrowRight className="group-hover:translate-x-1 transition-transform" size={16} />
-              </button>
-            </div>
+        <button
+          onClick={() => navigate('/ingredients')}
+          className="inline-flex items-center gap-2.5 bg-sage-900 hover:bg-sage-700 text-white font-semibold px-8 py-4 rounded-full transition-colors duration-200 cursor-pointer group"
+        >
+          Get Started
+          <LuArrowRight className="group-hover:translate-x-0.5 transition-transform duration-200" size={16} />
+        </button>
+      </section>
 
-            {/* Right: decorative recipe card */}
-            <div className="relative hidden lg:flex items-center justify-center py-12">
-              <div className="absolute inset-0 bg-sage-600/10 blur-3xl rounded-full" />
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="border-t border-warm-beige-200" />
+      </div>
 
-              <div className="relative w-80">
-                {/* Stacked depth shadow */}
-                <div className="absolute top-3 left-3 w-full h-full bg-warm-beige-300/60 rounded-3xl" />
+      <section className="py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <p className="text-xs font-semibold tracking-widest uppercase text-sage-600 mb-16">How it works</p>
 
-                {/* Main card */}
-                <div className="relative bg-white rounded-3xl shadow-xl p-7 border border-warm-beige-300/40">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-2 h-2 rounded-full bg-green-500" />
-                    <p className="text-xs font-semibold text-sage-600 uppercase tracking-wider">
-                      Recipe Generated
-                    </p>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-sage-900 mb-4">Pasta Primavera</h3>
-
-                  <div className="space-y-2.5 mb-5">
-                    {mockIngredients.map(ing => (
-                      <div key={ing} className="flex items-center gap-2.5 text-sm text-sage-600">
-                        <div className="w-1.5 h-1.5 rounded-full bg-sage-600 shrink-0" />
-                        {ing}
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-between pt-4 border-t border-warm-beige-200">
-                    <div className="flex items-center gap-1.5 text-xs text-sage-600">
-                      <LuClock size={12} />
-                      <span>25 min</span>
-                    </div>
-                    <div className="bg-sage-600 text-white text-xs font-medium px-3 py-1.5 rounded-full">
-                      Start Cooking
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating ingredient chips */}
-                <div className="absolute -top-4 -right-6 bg-sage-600 text-white text-xs font-medium px-3.5 py-2 rounded-full shadow-lg">
-                  + Tomato
-                </div>
-                <div className="absolute -bottom-3 -left-6 bg-white border border-warm-beige-300 text-sage-900 text-xs font-medium px-3.5 py-2 rounded-full shadow-md">
-                  + Garlic
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+            {steps.map(step => (
+              <div key={step.number} className="flex flex-col gap-4">
+                <span className="text-sm font-medium text-warm-beige-300">{step.number}</span>
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-lg font-semibold text-sage-900">{step.label}</h3>
+                  <p className="text-sage-600 text-sm leading-relaxed">{step.description}</p>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="border-t border-warm-beige-200" />
+      </div>
+
+      {/* Example output */}
+      <section className="py-24 px-6">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row md:items-start gap-16">
+
+          {/* Left: label */}
+          <div className="md:w-1/3">
+            <p className="text-xs font-semibold tracking-widest uppercase text-sage-600 mb-4">Example output</p>
+            <p className="text-sage-600 text-sm leading-relaxed max-w-xs">
+              Recipes are structured, readable, and skip everything you didn't ask for.
+            </p>
+          </div>
+
+          {/* Right: recipe card */}
+          <div className="md:w-2/3 max-w-md">
+            <div className="border border-warm-beige-200 rounded-2xl p-8">
+
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-sage-600 uppercase tracking-wider">Recipe</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-sage-600">
+                  <LuClock size={12} />
+                  <span>{exampleRecipe.time}</span>
+                </div>
+              </div>
+
+              <h3 className="text-2xl font-bold text-sage-900 mb-6">{exampleRecipe.title}</h3>
+
+              <ul className="space-y-2.5">
+                {exampleRecipe.ingredients.map(ing => (
+                  <li key={ing} className="flex items-center gap-3 text-sm text-sage-600">
+                    <div className="w-1 h-1 rounded-full bg-warm-beige-300 shrink-0" />
+                    {ing}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── TODO: Section placeholder ── */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="h-64 rounded-3xl border-2 border-dashed border-warm-beige-300 flex items-center justify-center">
-            <p className="text-warm-beige-300 text-sm font-medium tracking-wide">Section placeholder</p>
+      {/* Bottom strip */}
+      <section className="bg-warm-beige-100 border-t border-warm-beige-200">
+        <div className="max-w-5xl mx-auto px-6 py-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          <div>
+            <h2 className="text-2xl font-bold text-sage-900 mb-1">Ready to cook?</h2>
+            <p className="text-sage-600 text-sm">No signup. Just ingredients.</p>
           </div>
-        </div>
-      </section>
-
-      {/* ── TODO: Section placeholder ── */}
-      <section className="py-20 px-6 bg-warm-beige-100">
-        <div className="max-w-5xl mx-auto">
-          <div className="h-64 rounded-3xl border-2 border-dashed border-warm-beige-300 flex items-center justify-center">
-            <p className="text-warm-beige-300 text-sm font-medium tracking-wide">Section placeholder</p>
-          </div>
+          <button
+            onClick={() => navigate('/ingredients')}
+            className="inline-flex items-center gap-2.5 bg-sage-900 hover:bg-sage-700 text-white font-semibold px-7 py-3.5 rounded-full transition-colors duration-200 cursor-pointer group shrink-0"
+          >
+            Get Started
+            <LuArrowRight className="group-hover:translate-x-0.5 transition-transform duration-200" size={15} />
+          </button>
         </div>
       </section>
 
