@@ -130,7 +130,14 @@ export default function HomePage() {
       {/* Video Demo */}
       <section className="max-w-5xl mx-auto px-6 py-20">
         <p className="text-xs font-semibold tracking-widest uppercase text-sage-600 mb-6">Demo Video</p>
-        <video src="/demo.mp4" autoPlay loop muted playsInline preload="metadata" className="" />
+        <video
+          src="https://res.cloudinary.com/dkmpatozu/video/upload/v1773298485/Loom_Cropping_-_11_March_2026_ictqqs.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full rounded-xl"
+        />
       </section>
 
 

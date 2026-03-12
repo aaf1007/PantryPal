@@ -2,6 +2,8 @@
 
 An AI-powered recipe generator that turns your available ingredients into structured recipes using the Google Gemini API.
 
+[![Demo](https://res.cloudinary.com/dkmpatozu/video/upload/w_800,vs_2/v1773298485/Loom_Cropping_-_11_March_2026_ictqqs.gif)](https://res.cloudinary.com/dkmpatozu/video/upload/v1773298485/Loom_Cropping_-_11_March_2026_ictqqs.mp4)
+
 ## Features
 
 - Submit a list of pantry ingredients and receive a generated recipe with title, ingredients, steps, and estimated cook time
@@ -108,6 +110,14 @@ Returns a JSON array of ingredient suggestions (backed by the USDA API):
   "Chicken, broilers or fryers, drumstick, meat only, raw"
 ]
 ```
+
+## Hosting
+
+| Layer | Platform | Notes |
+|---|---|---|
+| Frontend | [Vercel](https://vercel.com) | Deploys automatically from `main` branch |
+| Backend | [Railway](https://railway.app) | Runs the Spring Boot app via Docker |
+| Database | PostgreSQL | Provisioned via Railway |
 
 ## Getting Started
 
