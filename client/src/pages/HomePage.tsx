@@ -122,6 +122,18 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Divider */}
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="border-t border-warm-beige-200" />
+      </div>
+
+      {/* Video Demo */}
+      <section className="max-w-5xl mx-auto px-6 py-20">
+        <p className="text-xs font-semibold tracking-widest uppercase text-sage-600 mb-6">Demo Video</p>
+        <video src="/demo.mp4" autoPlay loop muted playsInline preload="metadata" className="" />
+      </section>
+
+
       {/* Bottom strip */}
       <section className="bg-warm-beige-100 border-t border-warm-beige-200">
         <div className="max-w-5xl mx-auto px-6 py-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">

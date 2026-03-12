@@ -6,7 +6,8 @@ An AI-powered recipe generator that turns your available ingredients into struct
 
 - Submit a list of pantry ingredients and receive a generated recipe with title, ingredients, steps, and estimated cook time
 - RESTful API with a clean layered architecture (Controller → Service → Client)
-- Persistent user data via JPA with PostgreSQL in production and H2 for local development
+- User entity and API placeholder in place via JPA with PostgreSQL in production and H2 for local development (persistence and recipe association not yet implemented)
+- Ingredient search and autocomplete backed by the USDA API
 - Input validation with Spring Validation
 
 ## Tech Stack
@@ -36,7 +37,11 @@ An AI-powered recipe generator that turns your available ingredients into struct
 pantry-pal/
 ├── client/                  # React + TypeScript frontend
 │   └── src/
-│       └── App.tsx
+│       ├── App.tsx          # Routes and layout shell
+│       ├── main.tsx         # React entry + router
+│       ├── pages/           # Top-level pages (Home, Ingredients)
+│       ├── components/      # Feature components (e.g. IngredientsCall)
+│       └── layouts/         # Shared layouts (NavBar, CardNav, etc.)
 └── server/
     └── pantry-pal/          # Spring Boot backend
         └── src/main/java/com/aaf1007/pantry_pal/
@@ -56,11 +61,53 @@ POST /api/recipes/generate
 Content-Type: application/json
 
 {
-  "ingredients": "chicken, garlic, lemon, rosemary"
+  "ingredients": ["chicken", "garlic", "lemon", "rosemary"]
 }
 ```
 
-**Response:** A plain-text recipe with title, ingredients list, steps, and estimated time.
+**Response:** Structured JSON with the generated recipe:
+
+```json
+{
+  "title": "Lemon Garlic Roast Chicken",
+  "ingredients": [
+    "1 whole chicken",
+    "4 cloves garlic, minced",
+    "2 lemons, juiced",
+    "2 tbsp olive oil",
+    "1 tbsp fresh rosemary, chopped"
+  ],
+  "steps": [
+    "Preheat oven to 400°F (200°C).",
+    "Pat the chicken dry and place in a roasting pan.",
+    "Whisk together lemon juice, garlic, olive oil, rosemary, salt, and pepper.",
+    "Brush the mixture over the chicken and roast until cooked through."
+  ],
+  "estimatedTime": 60
+}
+```
+
+Fields map directly to the `RecipeResponse` DTO:
+- `title`: recipe title
+- `ingredients`: array of ingredient lines including quantities
+- `steps`: array of step-by-step instructions
+- `estimatedTime`: total estimated cook time in minutes
+
+### Search Ingredients
+
+```
+GET /api/ingredients/search?query=chicken
+```
+
+Returns a JSON array of ingredient suggestions (backed by the USDA API):
+
+```json
+[
+  "Chicken, broilers or fryers, breast, meat only, raw",
+  "Chicken, broilers or fryers, thigh, meat only, raw",
+  "Chicken, broilers or fryers, drumstick, meat only, raw"
+]
+```
 
 ## Getting Started
 
@@ -75,6 +122,8 @@ Content-Type: application/json
    ```
    gemini.apiKey=YOUR_API_KEY
    gemini.model=gemini-1.5-flash
+   # Optional: required if you use the ingredient search endpoint
+   usda.apiKey=YOUR_USDA_API_KEY
    ```
 
 2. Run the server:
@@ -94,3 +143,17 @@ npm run dev
 ```
 
 The dev server will start at `http://localhost:5173`.
+
+## What's Next
+
+- **User accounts and saved recipes**
+  - Backend: Implement authentication (e.g. Spring Security), user registration/login endpoints, and a `User` ↔ saved recipe relationship so users can persist recipes to their account.
+  - Frontend: Add a \"Save recipe\" action on generated recipes and a \"My recipes\" page that lists and opens a user's saved recipes.
+
+- **Popular recipes**
+  - Backend: Track recipe saves or generation counts and expose an endpoint such as `GET /api/recipes/popular` that returns the most popular recipes or summaries.
+  - Frontend: Add a \"Popular recipes\" section (for example on the home page) that showcases these recipes to new and returning users.
+
+- **Future enhancements**
+  - Support dietary preferences and restrictions (e.g. vegetarian, gluten-free).
+  - Generate shopping lists from selected recipes.
