@@ -23,10 +23,10 @@ type CardNavProps = {
   ease?: string
   baseColor?: string
   menuColor?: string
-  buttonBgColor?: string
-  buttonTextColor?: string
+  // buttonBgColor?: string
+  // buttonTextColor?: string
   theme?: string
-  onCtaClick?: () => void
+  // onCtaClick?: () => void
 }
 
 export default function CardNav({
@@ -36,9 +36,9 @@ export default function CardNav({
   ease = 'power3.out',
   baseColor = '#fff',
   menuColor,
-  buttonBgColor,
-  buttonTextColor,
-  onCtaClick,
+  // buttonBgColor,
+  // buttonTextColor,
+  // onCtaClick,
 }: CardNavProps) {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)

@@ -18,6 +18,5 @@ server/pantry-pal/target/
 .vscode/
 *.iml
 
-server/pantry-pal/src/main/resources/application.properties
 
 .env

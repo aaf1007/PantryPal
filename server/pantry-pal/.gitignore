@@ -33,5 +33,4 @@ build/
 .vscode/
 
 ### Private Files ###
-application.properties
 /.claude
