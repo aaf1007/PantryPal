@@ -17,7 +17,7 @@ An AI-powered recipe generator that turns your available ingredients into struct
 ### Backend
 | Technology | Purpose |
 |---|---|
-| Java 25 + Spring Boot 4.0.3 | Application framework |
+| Java 21 + Spring Boot 4.0.3 | Application framework |
 | Spring MVC | REST API layer |
 | Spring Data JPA | Data persistence |
 | Spring Validation | Request validation |
@@ -122,7 +122,7 @@ Returns a JSON array of ingredient suggestions (backed by the USDA API):
 ## Getting Started
 
 ### Prerequisites
-- Java 25+
+- Java 21+
 - Node.js 20+
 - A [Google Gemini API key](https://aistudio.google.com/app/apikey)
 
