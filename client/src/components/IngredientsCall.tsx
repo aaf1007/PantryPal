@@ -116,9 +116,10 @@ export default function IngredientsCall() {
     <div
       className={[
         "flex items-start gap-6 w-full px-4 transition-[max-width] duration-500 ease-out",
-        recipe ? "flex-row max-w-4xl" : "flex-col max-w-sm",
+        recipe ? "md:flex-row md:max-w-4xl flex-col" : "flex-col max-w-sm",
       ].join(' ')}
     >
+      {/* User Input */}
       <div className="bg-white border border-warm-beige-200 rounded-2xl p-6 flex flex-col gap-5 w-full lg:max-w-sm shrink-0">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-sage-900 tracking-tight">
