@@ -13,6 +13,8 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -22,9 +24,9 @@ public class SavedRecipes {
     @GeneratedValue
     private UUID id;
 
-    @NotNull
-    @Column(nullable=false)
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users user;
     
     @NotBlank
     @Column(nullable=false)
@@ -48,9 +50,9 @@ public class SavedRecipes {
     public SavedRecipes() {
     }
 
-    public SavedRecipes(@NotNull UUID userId, @NotBlank String title, @NotNull List<String> ingredients,
+    public SavedRecipes(@NotNull Users user, @NotBlank String title, @NotNull List<String> ingredients,
             @NotNull List<String> steps, int estimatedTime) {
-        this.userId = userId;
+        this.user = user;
         this.title = title;
         this.ingredients = ingredients;
         this.steps = steps;
@@ -61,12 +63,12 @@ public class SavedRecipes {
         return id;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public Users getUser() {
+        return user;
     }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setUser(Users user) {
+        this.user = user;
     }
 
     public String getTitle() {
