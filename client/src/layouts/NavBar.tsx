@@ -19,6 +19,14 @@ export default function NavBar() {
         { label: "Generate", ariaLabel: "Go to Ingredients", href: "/ingredients" },
       ]
     },
+    {
+      label: "Explore",
+      bgColor: "#E3ECE4",
+      textColor: "#3A4A3D",
+      links: [
+        { label: "Explore", ariaLabel: "Go to Ingredients", href: "/explore" },
+      ]
+    },
   ];
 
   return (

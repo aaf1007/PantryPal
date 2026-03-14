@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/figtree";
+@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -81,7 +82,7 @@
 }
 
 @theme inline {
-  --font-sans: 'Figtree Variable', sans-serif;
+  --font-sans: 'Geist Variable', sans-serif;
   --color-sage-900: #3A4A3D;
   --color-sage-700: #5A6D5E;
   --color-sage-600: #6B7E6F;
@@ -126,4 +127,16 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
 }
