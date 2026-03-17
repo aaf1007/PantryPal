@@ -1,0 +1,19 @@
+services:
+  backend:
+    build: ./server/pantry-pal
+    ports:
+      - "8080:8080"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
+      - USDA_API_KEY=${USDA_API_KEY}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - CORS_ALLOWED_ORIGIN_PATTERNS=http://localhost,http://localhost:80
+
+  frontend:
+    build: ./client
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
