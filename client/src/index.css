@@ -1,42 +1,58 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+
+/* ─── Fonts ──────────────────────────────────────────────────────
+   Active font: Geist Variable  →  applied via `html { @apply font-sans }` below
+   Figtree is imported but unused; remove if not needed.
+   ──────────────────────────────────────────────────────────────── */
 @import "@fontsource-variable/figtree";
 @import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
+/* ─── Shadcn Semantic Tokens — Light ────────────────────────────
+   These variables drive all shadcn/ui component colors.
+   Edit here to change component backgrounds, text, and borders.
+   ──────────────────────────────────────────────────────────────── */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color: black;
-  background-color: white;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
+
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
+
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
+
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
+
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
+
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
+
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
+
   --destructive: oklch(0.577 0.245 27.325);
+
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
+
+  --radius: 0.625rem;
+
+  /* Chart */
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
   --chart-4: oklch(0.488 0.243 264.376);
   --chart-5: oklch(0.424 0.199 265.638);
-  --radius: 0.625rem;
+
+  /* Sidebar */
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -47,30 +63,45 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* ─── Shadcn Semantic Tokens — Dark ─────────────────────────────
+   Overrides applied when the `.dark` class is on a parent element.
+   ──────────────────────────────────────────────────────────────── */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
+
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
+
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
+
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
+
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
+
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
+
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
+
   --destructive: oklch(0.704 0.191 22.216);
+
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
+
+  /* Chart */
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
   --chart-4: oklch(0.488 0.243 264.376);
   --chart-5: oklch(0.424 0.199 265.638);
+
+  /* Sidebar */
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -81,14 +112,32 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ─── Pantry Pal Brand Palette ───────────────────────────────────
+   The earthy sage + warm-beige design theme used throughout the app.
+   Use these Tailwind utility classes in components:
+
+     text-sage-900         → headings, bold labels        #3A4A3D
+     text-sage-700         → hover / interactive states   #5A6D5E
+     text-sage-600         → body copy, muted labels      #6B7E6F
+
+     bg-warm-beige-100     → section backgrounds          #F5F3EF
+     border-warm-beige-200 → borders, dividers            #E8E4DC
+     text-warm-beige-300   → subtle accents, bullets      #D4CFC4
+
+   ──────────────────────────────────────────────────────────────── */
 @theme inline {
+  /* Active font (Geist Variable) */
   --font-sans: 'Geist Variable', sans-serif;
+
+  /* Brand colors */
   --color-sage-900: #3A4A3D;
   --color-sage-700: #5A6D5E;
   --color-sage-600: #6B7E6F;
   --color-warm-beige-100: #F5F3EF;
   --color-warm-beige-200: #E8E4DC;
   --color-warm-beige-300: #D4CFC4;
+
+  /* Shadcn token aliases — do not modify these */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -120,6 +169,8 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+
+  /* Border radius scale derived from --radius */
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);

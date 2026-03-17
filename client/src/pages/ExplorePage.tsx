@@ -3,12 +3,17 @@ import type { Recipe } from "@/types/Recipe";
 
 export default function ExplorePage() {
     return (
-        <div className="grid md:grid-cols-3 pt-40 max-w-[900px] m-auto gap-3 mb-40">
+        <div className="max-w-[900px] m-auto mb-40 pt-30">
+          <header>
+            <h1 className="text-xl font-bold text-sage-900">Explore Page</h1>
+          </header>
+          <div className="grid md:grid-cols-3 gap-3">
             {recipes.map(cur => (
                 <div className="my-3">
                     <ExplorePageCards recipe={cur} key={cur.title} />
                 </div>
             ))}
+        </div>
         </div>
     )
 }

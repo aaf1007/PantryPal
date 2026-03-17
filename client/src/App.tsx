@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <NavBar />
-      <main>
+      <main className="min-h-screen">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/ingredients" element={<IngredientsPage />} />
