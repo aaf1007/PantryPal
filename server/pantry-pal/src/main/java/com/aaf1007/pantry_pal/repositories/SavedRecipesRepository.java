@@ -10,6 +10,7 @@ import com.aaf1007.pantry_pal.models.SavedRecipes;
 import com.aaf1007.pantry_pal.models.Users;
 
 @Repository
-public interface SavedRecipesRepository extends JpaRepository<SavedRecipes, UUID>{
+public interface SavedRecipesRepository extends JpaRepository<SavedRecipes, UUID> {
+
     public List<SavedRecipes> findAllByUser(Users user);
 }
