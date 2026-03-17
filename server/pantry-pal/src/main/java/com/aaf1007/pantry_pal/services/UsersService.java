@@ -1,5 +1,7 @@
 package com.aaf1007.pantry_pal.services;
 
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -7,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.aaf1007.pantry_pal.config.JwtUtil;
 import com.aaf1007.pantry_pal.dtos.AuthResponse;
+import com.aaf1007.pantry_pal.dtos.LoginRequest;
 import com.aaf1007.pantry_pal.dtos.RegisterRequest;
 import com.aaf1007.pantry_pal.models.Users;
 import com.aaf1007.pantry_pal.repositories.UsersRepository;
@@ -38,5 +41,24 @@ public class UsersService {
         String token = jwtUtil.generateToken(user.getId().toString());
             
         return new AuthResponse(token);
+    }
+
+    public AuthResponse login(LoginRequest request) throws ResponseStatusException {
+        Optional<Users> userOptional = usersRepository.findByEmail(request.getEmail());
+        
+        if (!userOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found");
+        }
+
+        Users user = userOptional.get();
+        String hashedPassword = user.getPasswordHash();
+
+        if (passwordEncoder.matches(request.getPassword(),hashedPassword )) {
+            String token = jwtUtil.generateToken(user.getId().toString());
+            return new AuthResponse(token);
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong Credentials");
+        }
     }
 }

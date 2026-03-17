@@ -34,3 +34,5 @@ build/
 
 ### Private Files ###
 /.claude
+
+application.properties
