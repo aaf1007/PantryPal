@@ -1,7 +1,9 @@
 import { gsap } from 'gsap'
+import { ArrowRight } from 'lucide-react'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { GoArrowUpRight } from 'react-icons/go'
 import './CardNav.css'
+import { Button } from './ui/button'
 
 type CardNavLink = {
   label: string
@@ -23,10 +25,10 @@ type CardNavProps = {
   ease?: string
   baseColor?: string
   menuColor?: string
-  // buttonBgColor?: string
-  // buttonTextColor?: string
+  buttonBgColor?: string
+  buttonTextColor?: string
   theme?: string
-  // onCtaClick?: () => void
+  onCtaClick?: () => void
 }
 
 export default function CardNav({
@@ -36,9 +38,9 @@ export default function CardNav({
   ease = 'power3.out',
   baseColor = '#fff',
   menuColor,
-  // buttonBgColor,
-  // buttonTextColor,
-  // onCtaClick,
+  buttonBgColor,
+  buttonTextColor,
+  onCtaClick,
 }: CardNavProps) {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -195,15 +197,10 @@ export default function CardNav({
           <div className="logo-container">
             <span className="logo-title text-sage-900 text-xl font-extrabold"><a href="/">{title}</a></span>
           </div>
-
-          {/* <button
-            type="button"
-            className="card-nav-cta-button"
-            style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
-            onClick={onCtaClick}
-          >
-            Get Started
-          </button> */}
+          <Button className="gap-2 text-sage-900 font-bold text-md hover:cursor-pointer" variant="link" onClick={onCtaClick}>
+              Sign In
+              <ArrowRight className="size-4" />
+          </Button>
         </div>
 
         <div className="card-nav-content" aria-hidden={!isExpanded}>
